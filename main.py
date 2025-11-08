@@ -2,7 +2,24 @@
 import telebot
 from telebot import types
 import os
+from flask import Flask
+import threading
 
+# Минимальный веб-сервер для Render
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "🐙 Bot is running!"
+
+def run_web():
+    app.run(host='0.0.0.0', port=5000)
+
+# Запускаем веб-сервер в фоне
+web_thread = threading.Thread(target=run_web, daemon=True)
+web_thread.start()
+
+# Ваш бот
 bot = telebot.TeleBot(os.environ['BOT_TOKEN'])
 bot.remove_webhook()
 
@@ -337,7 +354,7 @@ def show_back_to_function(call, text):
 
 if __name__ == "__main__":
     try:
-        print("Бот-справочник запущен...")
+        print("🐙 Бот-справочник запущен...")
         bot.infinity_polling()
     except Exception as e:
         print(f"Ошибка: {e}")
