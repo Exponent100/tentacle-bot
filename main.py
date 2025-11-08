@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import telebot
 from telebot import types
+import os
 
-bot = telebot.TeleBot('8316967745:AAGtgU-pUWsKVs-0eXFha5TKdDtSTjtDcOc')
+bot = telebot.TeleBot(os.environ['BOT_TOKEN'])
 bot.remove_webhook()
 
-@bot.message_handler(commands=['start']) #тут создала кнопки для меню
+@bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup(row_width=2)
     
@@ -16,15 +17,14 @@ def start(message):
     btn5 = types.InlineKeyboardButton("Что это вообще такое?", callback_data="what_is")
     btn6 = types.InlineKeyboardButton("Автор заикался", callback_data="avtor_is")
     
-    markup.add(btn1, btn2, btn3, btn4, btn5, btn6) #добавила кнопки в клавиатуру
+    markup.add(btn1, btn2, btn3, btn4, btn5, btn6)
     
     bot.send_message(
         message.chat.id, 
         "Добро пожаловать в микро-справочник по тентаклям\n\nВыбери, что тебя интересует:",
         reply_markup=markup
-    ) #вывелось сообщение, а потом кнопки
+    )
 
-    #добавление обрабатывание нажатия
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     if call.data == "history":
@@ -179,7 +179,6 @@ def callback_handler(call):
 Гравюра Кацусики Хокусая «Сон жены рыбака» (1814)
 Нэцкэ с подобным сюжетом (XVII век). 
 
-
 Литература:
 "Зов Ктулху" Г.Ф. Лавкрафт
 "Война миров" Герберт Уэллс
@@ -292,7 +291,7 @@ def show_function_menu(message):
     bot.edit_message_text(
         chat_id=message.chat.id,
         message_id=message.message_id,
-        text=" **Тентакли по функциям**\n\nВыберите назначение:",
+        text="**Тентакли по функциям**\n\nВыберите назначение:",
         reply_markup=markup,
         parse_mode='Markdown'
     )
@@ -339,18 +338,6 @@ def show_back_to_function(call, text):
 if __name__ == "__main__":
     try:
         print("Бот-справочник запущен...")
-        bot.infinity_polling()
-    except Exception as e:
-        print(f"Ошибка: {e}")
-
-
-if __name__ == "__main__":
-    #порт
-    import os
-    port = int(os.environ.get('PORT', 5000))
-    
-    try:
-        print("Бот запущен на сервере...")
         bot.infinity_polling()
     except Exception as e:
         print(f"Ошибка: {e}")
