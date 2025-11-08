@@ -2,7 +2,7 @@
 import telebot
 from telebot import types
 import os
-from flask import Flask
+from flask import Flask, request
 import threading
 
 # Минимальный веб-сервер для Render
@@ -10,7 +10,15 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "🐙 Bot is running!"
+    return "Bot is running!"
+
+@app.route('/health')
+def health():
+    return "OK", 200
+
+@app.route('/ping')
+def ping():
+    return "pong", 200
 
 def run_web():
     app.run(host='0.0.0.0', port=5000)
@@ -354,7 +362,9 @@ def show_back_to_function(call, text):
 
 if __name__ == "__main__":
     try:
-        print("🐙 Бот-справочник запущен...")
+        print("Бот-справочник запущен...")
+        print("Веб-сервер запущен на порту 5000")
+        print("Бот работает в режиме polling")
         bot.infinity_polling()
     except Exception as e:
         print(f"Ошибка: {e}")
